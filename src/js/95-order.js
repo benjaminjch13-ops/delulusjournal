@@ -11,8 +11,13 @@ function orderCode(){if(!ORD.code){const d=new Date(),p=n=>String(n).padStart(2,
   ORD.code=`DJ-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${[...r].map(x=>abc[x%abc.length]).join('')}`;ORD.date=d}return ORD.code}
 function orderRows(){const s=dlPick(DL_SIZES,ORD.size),l=dlPick(DL_LEATHERS,ORD.leather),e=dlPick(DL_ELASTICS,ORD.elastic),c=dlPick(DL_CHARMS,ORD.charm);
   return[['Tamaño',`${s[1]} · ${s[2]}`,1],['Color del cuero',l[1],2],['Color del elástico',e[1],3],['Charm',c[1],4]]}
+/* datos de entrega: se guardan solo en este navegador, para no volver a escribirlos */
+const SHIP_KEY='delulu-entrega';ORD.ship=(()=>{try{return Object.assign({name:'',addr:'',phone:''},JSON.parse(localStorage.getItem(SHIP_KEY)||'{}'))}catch(_){return{name:'',addr:'',phone:''}}})();
+const saveShip=()=>{try{localStorage.setItem(SHIP_KEY,JSON.stringify(ORD.ship))}catch(_){}};
+const SHIP_FIELDS=[['name','Nombre completo'],['addr','Dirección de entrega'],['phone','Teléfono']];
+function shipMissing(){const f=ORD.ship;if(f.name.trim().length<3)return'name';if(f.addr.trim().length<8)return'addr';if(f.phone.replace(/\D/g,'').length<8)return'phone';return null}
 const orderPrice=()=>dlPick(DL_SIZES,ORD.size)[4],orderTotal=()=>orderPrice()+DL_SHIP;
-function orderText(){return `¡Hola! Quiero mi Delulu Journal ✦\nPedido N.º ${orderCode()}\n${orderRows().map(([k,v])=>`• ${k}: ${v}`).join('\n')}\n• Precio: ${qz(orderPrice())} + ${qz(DL_SHIP)} de envío = ${qz(orderTotal())}\nTe mando mi ficha técnica 📎\n(La armé en ${BRAND.site.replace('https://','')})`}
+function orderText(){return `¡Hola! Quiero mi Delulu Journal ✦\nPedido N.º ${orderCode()}\n${orderRows().map(([k,v])=>`• ${k}: ${v}`).join('\n')}\n• Precio: ${qz(orderPrice())} + ${qz(DL_SHIP)} de envío = ${qz(orderTotal())}\n\nDatos de entrega\n• Nombre: ${ORD.ship.name.trim()||'—'}\n• Dirección: ${ORD.ship.addr.trim()||'—'}\n• Teléfono: ${ORD.ship.phone.trim()||'—'}\n\nTe mando mi ficha técnica 📎\n(La armé en ${BRAND.site.replace('https://','')})`}
 function openOrder(step=0,from){closeDrawer();coachClear();closeBookMenu();const back=curScreen();if(back!=='order')ORD.back=back;if(from){Object.assign(ORD,from);ORD.code=null}ORD.step=step;go('order');renderOrder();$('#ordRoot').scrollTop=0}
 /* map any digital agenda to the closest thing that can be ordered */
 function orderFromAgenda(a){const near=(list,hex)=>{const rgb=h=>{const n=parseInt(h.slice(1),16);return[n>>16,n>>8&255,n&255]},[r,g,b]=rgb(hex);return list.reduce((best,x)=>{const[R,G,B]=rgb(x[2]),d=(R-r)**2+(G-g)**2+(B-b)**2;return d<best[1]?[x[0],d]:best},['',1e9])[0]};
@@ -45,6 +50,11 @@ function renderOrder(){const s=ORD.step,st=ORD_STEPS[s],root=$('#ordRoot'),wide=
     head=`<p class="ord-hand">y así nace tu</p><h2><em>Delulu</em> Journal</h2>`;
     body=`<div class="ord-card"><span class="ord-cap">TU PEDIDO <b>N.º ${ORD.code}</b></span>${rows.map(([k,v,go])=>`<button type="button" class="ord-row" data-goto="${go}" title="Cambiar"><i class="ck">✓</i><span>${k}</span><em>${esc(v)}</em></button>`).join('')}
       <div class="ord-sum"><span>Libreta ${dlPick(DL_SIZES,ORD.size)[1]}</span><em>${qz(orderPrice())}</em><span>Envío</span><em>${qz(DL_SHIP)}</em><b>Total</b><b>${qz(orderTotal())}</b></div></div>
+     <div class="ord-ship-f" id="ordShip"><span class="ord-cap">DATOS DE ENTREGA</span>
+      <label><span>Nombre completo</span><input id="shName" data-f="name" autocomplete="name" maxlength="60" placeholder="Ej. Sofía Morales" value="${esc(ORD.ship.name)}"></label>
+      <label><span>Dirección de entrega</span><textarea id="shAddr" data-f="addr" autocomplete="street-address" rows="2" maxlength="160" placeholder="Calle, número, zona, ciudad y departamento">${esc(ORD.ship.addr)}</textarea></label>
+      <label><span>Teléfono</span><input id="shPhone" data-f="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="Ej. 5555 1234" value="${esc(ORD.ship.phone)}"></label>
+      <small>Solo se usan para tu envío y van en tu ficha.</small></div>
      <ol class="ord-how"><li><b>Descargá tu ficha técnica</b>: es una imagen con todo tu pedido.</li><li><b>Mandánosla por DM</b> a @${BRAND.ig} y te confirmamos.</li></ol>
      <button type="button" class="ord-dm" id="ordDL">${ico('dl')}DESCARGAR MI FICHA</button>
      <a class="ord-dm2" href="${BRAND.dm}" target="_blank" rel="noopener" id="ordDM">PEDIDOS POR DM →</a>
@@ -69,8 +79,9 @@ ordRoot.addEventListener('click',async e=>{const t=e.target;
   const o=t.closest('[data-o]');if(o){ORD[o.dataset.o]=o.dataset.v;ORD.code=null;if(o.dataset.o==='size')renderOrder();else{$$(`[data-o="${o.dataset.o}"]`,ordRoot).forEach(x=>{x.classList.toggle('on',x===o);x.setAttribute('aria-checked',x===o)});refreshPreview();refreshPick()}return}
   if(t.closest('#ordCopy')){const txt=orderText();try{await navigator.clipboard.writeText(txt);toast('Pedido copiado. Pegalo en el DM')}catch(_){showOrderText(txt)}return}
   if(t.closest('#ordFicha')){openFicha();return}
-  if(t.closest('#ordDL')){const b=t.closest('#ordDL');if(b.disabled)return;b.disabled=true;try{await saveFicha();toast('Ficha descargada ✦ Ahora mandala por DM',{ms:6000})}catch(err){toast(err?.message||'No se pudo descargar la ficha')}finally{b.disabled=false}return}
+  if(t.closest('#ordDL')){const b=t.closest('#ordDL');if(b.disabled)return;const miss=shipMissing();if(miss){const inp=$(`[data-f="${miss}"]`,ordRoot);inp.classList.add('bad');inp.focus();inp.scrollIntoView({block:'center',behavior:'smooth'});toast(`Completá tu ${SHIP_FIELDS.find(f=>f[0]===miss)[1].toLowerCase()} para descargar la ficha`);return}b.disabled=true;try{await saveFicha();toast('Ficha descargada ✦ Ahora mandala por DM',{ms:6000})}catch(err){toast(err?.message||'No se pudo descargar la ficha')}finally{b.disabled=false}return}
   if(t.closest('#ordDM')){const txt=orderText();try{await navigator.clipboard.writeText(txt);toast('Copiamos tu pedido: pegalo en el chat y adjuntá tu ficha',{ms:7000})}catch(_){}return}});
+ordRoot.addEventListener('input',e=>{const f=e.target.dataset?.f;if(!f)return;ORD.ship[f]=e.target.value;e.target.classList.remove('bad');saveShip()});
 /* drag the preview to turn the notebook */
 ordRoot.addEventListener('pointerdown',e=>{const st=e.target.closest('#ordStage');if(!st)return;const b=$('.b3',st);if(!b)return;e.preventDefault();const x0=e.clientX,r0=ORD.ry;st.classList.add('dragging');
   const mv=m=>{ORD.ry=r0+(m.clientX-x0)*.6;b.style.setProperty('--ry',ORD.ry+'deg')};const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);st.classList.remove('dragging')};

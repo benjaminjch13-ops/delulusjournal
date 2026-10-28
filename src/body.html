@@ -3,15 +3,30 @@
     <a class="brand" href="#" id="brandHome" aria-label="Delulu Journal, inicio"></a>
     <div class="spacer"></div>
     <nav class="shop-nav" aria-label="Secciones">
+      <a href="#opiniones" class="shop-link ghost" data-scroll="opiniones">Opiniones</a>
       <a href="#pedir" class="shop-link" data-step="1">Armá tu libreta</a>
       <a href="https://www.instagram.com/delulu.journal/" class="btn ghost icon" target="_blank" rel="noopener" aria-label="Instagram @delulu.journal" title="@delulu.journal en Instagram"><svg class="i"><use href="#i-ig"/></svg></a>
     </nav>
   </header>
   <section class="view show" id="order">
     <div class="ord" id="ordRoot"></div>
+    <section class="revs" id="opiniones" aria-labelledby="revsT">
+      <div class="revs-in">
+        <header class="revs-head"><p class="ord-hand">con mucho amor ✦</p><h2 id="revsT">Lo que dicen de su <em>Delulu</em></h2><div class="revs-avg" id="revsAvg"></div></header>
+        <div class="revs-list" id="revsList"><p class="revs-empty">Cargando opiniones…</p></div>
+        <form class="revs-form" id="revsForm" novalidate>
+          <h3>Dejá tu opinión</h3>
+          <div class="revs-stars" role="radiogroup" aria-label="Calificación"></div>
+          <label><span>Tu nombre</span><input name="name" maxlength="40" autocomplete="given-name" placeholder="Ej. Sofi" required></label>
+          <label><span>Tu comentario</span><textarea name="text" rows="3" maxlength="500" placeholder="¿Qué tal tu libreta? ¿Para qué la usás?" required></textarea></label>
+          <label class="hp" aria-hidden="true">No llenar<input name="website" tabindex="-1" autocomplete="off"></label>
+          <div class="revs-actions"><span class="revs-msg" id="revsMsg" role="status"></span><button type="submit" class="btn primary">Publicar</button></div>
+        </form>
+      </div>
+    </section>
     <footer class="shop-foot" id="contacto">
       <div class="sf-brand"><span class="sf-logo"></span><p>Libretas de cuero artesanal,<br>hechas a mano en Guatemala ✦</p></div>
-      <div class="sf-col"><h3>Pedidos</h3><a href="#pedir" data-step="1">Armá tu libreta en 4 pasos</a><a href="https://ig.me/m/delulu.journal" target="_blank" rel="noopener">Pedidos por DM</a></div>
+      <div class="sf-col"><h3>Pedidos</h3><a href="#pedir" data-step="1">Armá tu libreta en 4 pasos</a><a href="https://ig.me/m/delulu.journal" target="_blank" rel="noopener">Pedidos por DM</a><a href="#opiniones" data-scroll="opiniones">Opiniones</a></div>
       <div class="sf-col"><h3>Seguinos</h3><a href="https://www.instagram.com/delulu.journal/" target="_blank" rel="noopener" class="sf-ig"><svg class="i"><use href="#i-ig"/></svg>@delulu.journal</a></div>
       <p class="sf-copy">© <span id="sfYear"></span> Delulu Journal by Ensso · Soñá. Planeá. Repetí.</p>
     </footer>

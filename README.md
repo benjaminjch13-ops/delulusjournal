@@ -39,4 +39,14 @@ npm run build      # crea dist/index.html
 npm run dev        # versión sin minificar en http://localhost:3000
 ```
 
+## Opiniones
+
+La sección de opiniones usa `api/comments.js` (función de Vercel) y guarda los comentarios en Upstash Redis:
+
+1. En Vercel, abrí el proyecto → **Storage** → **Create** → **Upstash for Redis** (plan gratis) y conectalo a este proyecto. Eso crea solo las variables `KV_REST_API_URL` y `KV_REST_API_TOKEN`.
+2. En **Settings → Environment Variables** agregá `ADMIN_KEY` con una clave que solo vos sepás.
+3. Volvé a publicar (Deployments → Redeploy).
+
+Para borrar una opinión: abrí `delulusjournal.vercel.app/#admin`, escribí tu clave y aparece el botón de borrar en cada opinión. Las opiniones no aceptan enlaces y cada persona puede dejar hasta 3 por hora.
+
 Vercel usa `vercel.json`: corre `npm run build` y publica la carpeta `dist`.

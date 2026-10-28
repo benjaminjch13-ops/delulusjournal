@@ -38,10 +38,13 @@ async function renderFicha(){await fichaFonts();const code=orderCode(),a=orderAg
   ctx.fillStyle=Y;ctx.font=`700 15px ${sans}`;ctx.letterSpacing='3px';ctx.fillText('TOTAL',kx+44,py+40);ctx.letterSpacing='0px';
   ctx.fillStyle=CR;ctx.globalAlpha=.85;ctx.font=`500 17px ${sans}`;ctx.fillText(`Libreta ${qz(orderPrice())} + envío ${qz(DL_SHIP)}`,kx+44,py+70);ctx.globalAlpha=1;
   ctx.textAlign='right';ctx.fillStyle=Y;ctx.font=`400 50px ${serif}`;ctx.fillText(qz(orderTotal()),kx+kw-44,py+67);ctx.textAlign='left';
-  /* what happens next */
-  ctx.textAlign='center';ctx.fillStyle=CR;ctx.font=`400 30px ${serif}`;
-  ctx.fillText('Mandá esta ficha por DM y te confirmamos tu pedido ✦',FICHA_W/2,1060);
-  ctx.fillStyle=P;ctx.font=`400 30px ${hand}`;ctx.fillText('Cuero artesanal, hecho a mano en Guatemala',FICHA_W/2,1108);
+  /* datos de entrega */
+  const dy=1010;ctx.save();ctx.strokeStyle='rgba(246,224,138,.55)';ctx.setLineDash([8,7]);ctx.lineWidth=2;rr(ctx,96,dy,FICHA_W-192,118,18);ctx.stroke();ctx.restore();
+  ctx.textAlign='left';ctx.fillStyle=Y;ctx.font=`700 15px ${sans}`;ctx.letterSpacing='4px';ctx.fillText('DATOS DE ENTREGA',124,dy+36);ctx.letterSpacing='0px';
+  const sh=ORD.ship||{},val=v=>(v||'').trim()||'—';
+  ctx.fillStyle=CR;ctx.font=`500 24px ${sans}`;ctx.fillText(fitText(ctx,val(sh.name),520),124,dy+72);
+  ctx.textAlign='right';ctx.fillText('☎ '+val(sh.phone),FICHA_W-124,dy+72);ctx.textAlign='left';
+  ctx.globalAlpha=.85;ctx.font=`400 20px ${sans}`;ctx.fillText(fitText(ctx,val(sh.addr).replace(/\s+/g,' '),FICHA_W-248),124,dy+102);ctx.globalAlpha=1;ctx.textAlign='center';
   const pill='PEDIDOS POR DM → @'+BRAND.ig.toUpperCase();ctx.font=`700 26px ${sans}`;ctx.letterSpacing='4px';const pw=ctx.measureText(pill).width+80;
   ctx.fillStyle=Y;rr(ctx,(FICHA_W-pw)/2,1150,pw,70,35);ctx.fill();ctx.fillStyle=INK;ctx.fillText(pill,FICHA_W/2,1195);ctx.letterSpacing='0px';
   ctx.fillStyle=CR;ctx.globalAlpha=.75;ctx.font=`600 20px ${sans}`;ctx.fillText(BRAND.site.replace('https://',''),FICHA_W/2,1266);ctx.globalAlpha=1;

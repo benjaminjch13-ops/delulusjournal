@@ -652,3 +652,44 @@ a.btn{text-decoration:none}
 .ord-sum em{font-style:normal;text-align:right}
 .ord-sum b{font:400 26px "Bodoni Moda",serif;color:#F6E08A;margin-top:4px}
 .ord-sum b:last-child{text-align:right}
+.ord-ship-f{background:var(--ocard);color:#22403B;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 18px 30px -18px rgba(0,0,0,.5)}
+.ord-ship-f label{display:flex;flex-direction:column;gap:4px;font:600 13px var(--f-body)}
+.ord-ship-f input,.ord-ship-f textarea{border:1.5px solid rgba(34,64,59,.2);border-radius:10px;padding:10px 12px;font:500 16px var(--f-body);color:#22403B;background:#fff;resize:vertical;width:100%;box-sizing:border-box}
+.ord-ship-f input:focus,.ord-ship-f textarea:focus{outline:none;border-color:#386660;box-shadow:0 0 0 3px rgba(56,102,96,.2)}
+.ord-ship-f .bad,.ord-ship-f .bad:focus{border-color:#b33a3a;box-shadow:0 0 0 3px rgba(179,58,58,.18)}
+.ord-ship-f small{font-size:12px;opacity:.7}
+/* opiniones */
+.revs{background:#F3EEE6;color:#22403B;padding:56px max(20px,env(safe-area-inset-left,0px)) 64px;flex:none}
+.revs-in{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px 40px;align-items:start}
+.revs-head{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 24px}
+.revs-head .ord-hand{width:100%;color:#7F3A3C;margin:0}
+.revs-head h2{margin:0;font:400 clamp(32px,4.6vw,52px)/1.05 "Bodoni Moda",Georgia,serif}
+.revs-head h2 em{color:#386660}
+.revs-avg{display:flex;align-items:center;gap:8px;font:600 14px var(--f-body);padding-bottom:8px}
+.revs-avg b{font:400 30px "Bodoni Moda",serif}
+.stars{display:inline-flex;gap:1px;color:rgba(34,64,59,.2);font-style:normal}
+.stars i{font-style:normal}.stars i.on{color:#E0B04A}
+.stars.big{font-size:22px}
+.revs-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.rev{background:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 10px 24px -18px rgba(34,64,59,.6);border:1px solid rgba(34,64,59,.08)}
+.rev header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.rev header b{font:400 19px "Caveat Brush",cursive;color:#7F3A3C}
+.rev time{font-size:12px;opacity:.6;margin-left:auto}
+.rev p{margin:0;line-height:1.5;font-size:15px;white-space:pre-line}
+.rev-del{border:0;background:none;color:#b33a3a;padding:2px;display:grid;place-items:center}
+.rev-del .i{width:16px;height:16px}
+.revs-empty{grid-column:1/-1;margin:0;padding:22px;border:1.5px dashed rgba(34,64,59,.25);border-radius:16px;text-align:center;font:400 21px "Caveat Brush",cursive;color:#386660}
+.revs-form{background:#386660;color:#F3EEE6;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px;position:sticky;top:16px}
+.revs-form h3{margin:0;font:400 26px "Bodoni Moda",serif}
+.revs-form label{display:flex;flex-direction:column;gap:4px;font:600 13px var(--f-body)}
+.revs-form input,.revs-form textarea{border:0;border-radius:10px;padding:10px 12px;font:500 16px var(--f-body);color:#22403B;background:#fff;resize:vertical;width:100%;box-sizing:border-box}
+.revs-form .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.revs-stars{display:flex;gap:4px}
+.revs-stars button{border:0;background:none;font-size:32px;line-height:1;color:rgba(255,255,255,.3);padding:0 2px;cursor:pointer;transition:transform .15s}
+.revs-stars button.on{color:#F6E08A}
+.revs-stars button:hover{transform:scale(1.15)}
+.revs-actions{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.revs-actions .btn.primary{background:#F6E08A;color:#22403B;border-color:transparent}
+.revs-msg{font-size:13px;color:#F6E08A}
+.shop-link.ghost{border-color:transparent}
+@media (max-width:820px){.revs-in{grid-template-columns:1fr}.revs-form{position:static}}
