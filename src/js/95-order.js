@@ -31,14 +31,42 @@ function orderFromAgenda(a){const near=(list,hex)=>{const rgb=h=>{const n=parseI
   return{size:a.size==='a6'?'a6':'a5',leather:isTornasol(a.cover)?'tornasol':near(DL_LEATHERS,a.cover.color),elastic:near(DL_ELASTICS,a.cover.elastic.color),charm:ch?(DL_CHARMS.some(x=>x[0]===ch.shape)?ch.shape:'concha'):'none'}}
 
 /* la libreta abierta: el cuero extendido y el librito que elijas encima, con su tipo de hoja */
-function insideHTML(w){const a=orderAgenda(),[W,H]=dims(a),bw=Math.round(w*1.05*W/560),bh=Math.round(bw*H/W),ins=orderInserts(),k=ORD.bk,lc=dlPick(DL_LEATHERS,ORD.leather)[2];
-  const leaf=(t,side)=>`<div class="in-pg pp-${t} ${side}"></div>`;
-  return `<div class="ord-inside" style="--bw:${bw}px;--bh:${bh}px">
-   <div class="in-sp" style="background:${swBg(lc)}">${isTornasol({color:lc})?'<i class="iris"></i>':''}<span class="in-rv l"></span><span class="in-rv r"></span>
-    <div class="in-stack">${[2,1].map(d=>`<div class="in-under d${d}"></div>`).join('')}<div class="in-book">${leaf(ins[k],'l')}${leaf(ins[k],'r')}<span class="in-fold"></span></div></div></div>
+function insideHTML(w,anim){const a=orderAgenda(),[W,H]=dims(a),bw=Math.round(w*.95*W/560),bh=Math.round(bw*H/W),ins=orderInserts(),k=ORD.bk,lc=dlPick(DL_LEATHERS,ORD.leather)[2],ec=dlPick(DL_ELASTICS,ORD.elastic)[2],tor=isTornasol({color:lc});
+  const leaf=(t,side)=>`<div class="in-pg pp-${t} ${side}"></div>`,iris=tor?'<i class="iris"></i>':'';
+  const ch=CHARM_PHOTOS[ORD.charm];
+  /* la tapa que gira: por fuera el cuero con elástico y charm, por dentro el cuero con la hoja izquierda */
+  const cover=anim?`<div class="in-leaf"><div class="lf-front" style="background:${swBg(lc)}">${iris}<span class="lf-flap"></span><span class="lf-rv t"></span><span class="lf-rv b"></span><span class="lf-band" style="background:${ec}"></span>${ch?`<img class="lf-charm" src="${ch.src}" alt="">`:''}</div><div class="lf-back" style="background:${swBg(lc)}">${iris}<div class="lf-page">${leaf(ins[k],'l')}</div></div></div>`:'';
+  return `<div class="ord-inside${anim?' anim':''}" style="--bw:${bw}px;--bh:${bh}px">
+   <div class="in-tilt"><div class="in-3d"><div class="in-sp" style="background:${swBg(lc)}">${iris}<span class="in-rv l"></span><span class="in-rv r"></span>
+    <div class="in-stack">${[2,1].map(d=>`<div class="in-under d${d}"></div>`).join('')}<div class="in-book">${leaf(ins[k],'l')}${leaf(ins[k],'r')}<span class="in-fold"></span></div></div></div>${cover}</div></div>
    <div class="in-tabs" role="tablist" aria-label="Libritos">${ins.map((t,i)=>`<button type="button" role="tab" aria-selected="${i===k}" class="${i===k?'on':''}" data-bk="${i}"><b>${i+1}</b>${insName(t)}</button>`).join('')}</div></div>`}
-function stageHTML(bw){const open=ORD.step===2||ORD.view==='open';
-  return `${open?insideHTML(bw):ordPreview(bw)}<div class="ord-stage-ft">${open?'':'<span class="ord-drag">arrastrá para girarla</span>'}${ORD.step===2?'':`<button type="button" class="ord-view" id="ordView">${open?'Ver cerrada':'Ver por dentro ✦'}</button>`}</div>`}
+const stageOpen=()=>ORD.step===2||ORD.view==='open';
+function stageHTML(bw,open=stageOpen(),anim=false){
+  return `${open?insideHTML(bw,anim):ordPreview(bw)}<div class="ord-stage-ft">${open?'':'<span class="ord-drag">arrastrá para girarla</span>'}${ORD.step===2?'':`<button type="button" class="ord-view" id="ordView">${open?'Ver cerrada':'Ver por dentro ✦'}</button>`}</div>`}
+const STAGE_DECO='<span class="corner tl"></span><span class="corner br"></span><span class="star a">★</span><span class="star b">★</span>';
+const calm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* abre o cierra la libreta con animación cuando cambia lo que se ve */
+function paintStage(force){const st=$('#ordStage');if(!st)return;const bw=innerWidth>860?250:150,want=stageOpen(),prev=ORD.shown;ORD.shown=want;
+  const tok=ORD.anim=(ORD.anim||0)+1;
+  if(force||prev===undefined||prev===want||calm()){st.innerHTML=STAGE_DECO+stageHTML(bw,want);return}
+  st.innerHTML=STAGE_DECO+stageHTML(bw,true,true);const box=$('.ord-inside',st),leafEl=$('.in-leaf',st),sp=$('.in-sp',st),tabs=$('.in-tabs',st),ft=$('.ord-stage-ft',st);
+  const T=1100,E='cubic-bezier(.6,.05,.25,1)',shift=box.querySelector('.in-3d'),half='translateX(calc(var(--bw) * -0.5 - 6.5px))';
+  const done=()=>{if(ORD.anim!==tok)return;leafEl.remove();box.classList.remove('anim')};
+  if(want){/* abrir: se suelta el elástico, la tapa gira y el cuero se extiende */
+    tabs.animate([{opacity:0},{opacity:0,offset:.7},{opacity:1}],{duration:T,easing:'ease-out'});ft.animate([{opacity:0},{opacity:1}],{duration:T});
+    $('.lf-band',st).animate([{transform:'translateY(-50%) scaleX(1)',opacity:1},{transform:'translateY(-50%) translateX(30%) scaleX(.6)',opacity:0}],{duration:T*.28,easing:'ease-in',fill:'forwards'});
+    $('.lf-charm',st)?.animate([{transform:'translate(-50%,-10%) rotate(0)',opacity:1},{transform:'translate(-50%,10%) rotate(18deg)',opacity:0}],{duration:T*.3,easing:'ease-in',fill:'forwards'});
+    shift.animate([{transform:half},{transform:half,offset:.22},{transform:'none'}],{duration:T,easing:E});
+    sp.animate([{clipPath:'inset(0 0 0 50%)'},{clipPath:'inset(0 0 0 50%)',offset:.6},{clipPath:'inset(0 0 0 0)',offset:.61},{clipPath:'inset(0 0 0 0)'}],{duration:T});
+    leafEl.animate([{transform:'rotateY(0deg)'},{transform:'rotateY(0deg)',offset:.22},{transform:'rotateY(-180deg)'}],{duration:T,easing:E,fill:'forwards'}).finished.then(done,()=>{})}
+  else{/* cerrar: la tapa vuelve, el elástico se pone y aparece la libreta en 3D */
+    tabs.animate([{opacity:1},{opacity:0}],{duration:T*.25,fill:'forwards'});
+    shift.animate([{transform:'none'},{transform:half,offset:.78},{transform:half}],{duration:T,easing:E,fill:'forwards'});
+    sp.animate([{clipPath:'inset(0 0 0 0)'},{clipPath:'inset(0 0 0 0)',offset:.39},{clipPath:'inset(0 0 0 50%)',offset:.4},{clipPath:'inset(0 0 0 50%)'}],{duration:T,fill:'forwards'});
+    $('.lf-band',st).animate([{opacity:0,transform:'translateY(-50%) translateX(30%) scaleX(.6)'},{opacity:0,transform:'translateY(-50%) translateX(30%) scaleX(.6)',offset:.75},{opacity:1,transform:'translateY(-50%) scaleX(1)'}],{duration:T,easing:'ease-out',fill:'forwards'});
+    $('.lf-charm',st)?.animate([{opacity:0},{opacity:0,offset:.8},{opacity:1}],{duration:T,fill:'forwards'});
+    leafEl.animate([{transform:'rotateY(-180deg)'},{transform:'rotateY(0deg)',offset:.78},{transform:'rotateY(0deg)'}],{duration:T,easing:E,fill:'forwards'}).finished.then(()=>{if(ORD.anim!==tok)return;
+      st.innerHTML=STAGE_DECO+stageHTML(bw,false);$('.ord-book',st)?.animate([{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:350,easing:'ease-out'})},()=>{})}}
 function ordPreview(w){const a=orderAgenda();return `<div class="ord-book" style="--sway:${ORD.ry}deg">${book3D(a,Math.round(w*dims(a)[0]/560),{ry:ORD.ry,rx:7})}</div>`}
 const charmThumb=id=>id==='none'?'<i class="nocharm">—</i>':`<img src="${CHARM_PHOTOS[id].src}" alt="" loading="lazy">`;
 /* what she has picked so far: always visible, tap a chip to go back to that step */
@@ -83,10 +111,10 @@ function renderOrder(){const s=ORD.step,st=ORD_STEPS[s],root=$('#ordRoot'),wide=
   const dots=ORD_STEPS.map((_,i)=>`<i class="${i===s?'on':''}"></i>`).join('');
   root.className='ord s-'+st.bg;
   root.innerHTML=`<header class="ord-top">${s?`<button type="button" class="ord-x" id="ordClose">${ico('back')}<span>Inicio</span></button>`:'<b class="ord-ph"></b>'}<span class="ord-eb">DELULU JOURNAL</span><span class="ord-eb">${s===0?'CÓMO COMPRAR':s===ORD_LAST?'¡LISTO!':`PASO ${s} DE ${ORD_N}`}</span></header>
-   <div class="ord-main"><div class="ord-stage" id="ordStage"><span class="corner tl"></span><span class="corner br"></span><span class="star a">★</span><span class="star b">★</span>${stageHTML(bw)}</div>
+   <div class="ord-main"><div class="ord-stage" id="ordStage"></div>
     <div class="ord-copy">${s>=1&&s<ORD_LAST?ordPick():''}${head}${body}${note?`<p class="ord-note">${note}</p>`:''}</div></div>
-   <footer class="ord-nav">${s>0?`<button type="button" class="btn" id="ordPrev">${ico('left')}Atrás</button>`:'<span></span>'}<div class="ord-dots" aria-hidden="true">${dots}</div>${s<ORD_LAST?`<button type="button" class="btn ord-next" id="ordNext">${s===0?'Empezar':s===ORD_N?'Ver mi pedido':'Siguiente'} →</button>`:`<button type="button" class="btn" id="ordAgain">Armar otra</button>`}</footer>`}
-function refreshPreview(){const st=$('#ordStage');if(st)st.innerHTML=`<span class="corner tl"></span><span class="corner br"></span><span class="star a">★</span><span class="star b">★</span>${stageHTML(innerWidth>860?250:150)}`}
+   <footer class="ord-nav">${s>0?`<button type="button" class="btn" id="ordPrev">${ico('left')}Atrás</button>`:'<span></span>'}<div class="ord-dots" aria-hidden="true">${dots}</div>${s<ORD_LAST?`<button type="button" class="btn ord-next" id="ordNext">${s===0?'Empezar':s===ORD_N?'Ver mi pedido':'Siguiente'} →</button>`:`<button type="button" class="btn" id="ordAgain">Armar otra</button>`}</footer>`;paintStage()}
+function refreshPreview(force){paintStage(force)}
 
 const ordRoot=$('#ordRoot');
 ordRoot.addEventListener('click',async e=>{const t=e.target;
@@ -95,8 +123,8 @@ ordRoot.addEventListener('click',async e=>{const t=e.target;
   if(t.closest('#ordPrev')){ORD.step=Math.max(0,ORD.step-1);renderOrder();return}
   if(t.closest('#ordAgain')){ORD.step=1;ORD.code=null;renderOrder();return}
   if(t.closest('#ordView')){ORD.view=ORD.view==='open'?'closed':'open';refreshPreview();return}
-  const bk=t.closest('[data-bk]');if(bk){ORD.bk=+bk.dataset.bk;refreshPreview();return}
-  const ins=t.closest('[data-ins]');if(ins){const i=+ins.dataset.ins;ORD.ins5[i]=ins.dataset.v;ORD.bk=i;ORD.code=null;$$(`[data-ins="${i}"]`,ordRoot).forEach(x=>{const on=x===ins;x.classList.toggle('on',on);x.setAttribute('aria-checked',on)});refreshPreview();refreshPick();return}
+  const bk=t.closest('[data-bk]');if(bk){ORD.bk=+bk.dataset.bk;refreshPreview(true);$('#ordStage .in-book')?.animate([{opacity:.2,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:320,easing:'ease-out'});return}
+  const ins=t.closest('[data-ins]');if(ins){const i=+ins.dataset.ins;ORD.ins5[i]=ins.dataset.v;ORD.bk=i;ORD.code=null;$$(`[data-ins="${i}"]`,ordRoot).forEach(x=>{const on=x===ins;x.classList.toggle('on',on);x.setAttribute('aria-checked',on)});refreshPreview(true);refreshPick();return}
   const g=t.closest('[data-goto]');if(g){ORD.step=+g.dataset.goto;renderOrder();return}
   if(t.closest('#ordRand')){surprise();if(ORD.step===0)ORD.step=ORD_LAST;renderOrder();const b=$('#ordStage .b3');b?.animate?.([{transform:'scale(.92)'},{transform:'scale(1.03)'},{transform:'scale(1)'}],{duration:420,easing:'ease-out'});toast('¡Así sería tu Delulu! Cambiá lo que quieras ✦');return}
   const o=t.closest('[data-o]');if(o){ORD[o.dataset.o]=o.dataset.v;ORD.code=null;if(o.dataset.o==='size')renderOrder();else{$$(`[data-o="${o.dataset.o}"]`,ordRoot).forEach(x=>{x.classList.toggle('on',x===o);x.setAttribute('aria-checked',x===o)});refreshPreview();refreshPick()}return}
