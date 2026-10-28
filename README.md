@@ -6,7 +6,7 @@ Página web de **Delulu Journal by Ensso** ([@delulu.journal](https://www.instag
 
 Esta es la **tienda**: la página para armar y pedir tu libreta.
 
-- **Pedí tu libreta** en 4 pasos (tamaño, color del cuero, elástico y charm) con vista 3D que se gira con el dedo.
+- **Pedí tu libreta** en 5 pasos (tamaño, libritos por dentro, color del cuero, elástico y charm) con vista 3D que se gira con el dedo.
 - **Ficha técnica**: al terminar se descarga una imagen con todo el pedido para mandarla por DM a Instagram. Enlace directo: `/#pedir`.
 - Redes: Instagram [@delulu.journal](https://www.instagram.com/delulu.journal/).
 

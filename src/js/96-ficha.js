@@ -6,6 +6,11 @@ function fichaSwatch(ctx,x,y,r,c){ctx.save();ctx.beginPath();ctx.arc(x,y,r,0,7);
   if(c===TORNASOL&&ctx.createConicGradient){const g=ctx.createConicGradient(0,x,y);[['#ffd6ec',0],['#d6ecff',.25],['#dcffe6',.5],['#fff4c6',.75],['#ffd6ec',1]].forEach(([k,p])=>g.addColorStop(p,k));ctx.fillStyle=g}else ctx.fillStyle=c;
   ctx.shadowColor='rgba(0,0,0,.25)';ctx.shadowBlur=6;ctx.shadowOffsetY=2;ctx.fill();ctx.shadowColor='transparent';ctx.lineWidth=4;ctx.strokeStyle='#fff';ctx.stroke();ctx.restore()}
 function fichaStar(ctx,x,y,r,c){ctx.save();ctx.fillStyle=c;ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4-Math.PI/2,rad=i%2?r*.32:r;ctx.lineTo(x+Math.cos(a)*rad,y+Math.sin(a)*rad)}ctx.closePath();ctx.fill();ctx.restore()}
+function fichaPage(ctx,x,y,w,h,t){ctx.save();ctx.shadowColor='rgba(0,0,0,.25)';ctx.shadowBlur=4;ctx.shadowOffsetY=1;ctx.fillStyle='#FBF7F0';ctx.fillRect(x,y,w,h);ctx.shadowColor='transparent';
+  ctx.strokeStyle='rgba(0,0,0,.12)';ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,w-1,h-1);
+  if(t==='lineas'){ctx.strokeStyle='rgba(70,110,160,.55)';for(let yy=y+7;yy<y+h-2;yy+=5){ctx.beginPath();ctx.moveTo(x+3,yy);ctx.lineTo(x+w-3,yy);ctx.stroke()}}
+  if(t==='puntos'){ctx.fillStyle='rgba(60,60,60,.55)';for(let yy=y+5;yy<y+h-2;yy+=5)for(let xx=x+4;xx<x+w-2;xx+=5){ctx.beginPath();ctx.arc(xx,yy,.8,0,7);ctx.fill()}}
+  ctx.restore()}
 function fitText(ctx,t,max){let s=t;while(ctx.measureText(s).width>max&&s.length>1)s=s.slice(0,-2)+'…';return s}
 async function renderFicha(){await fichaFonts();const code=orderCode(),a=orderAgenda(),[W,H]=dims(a),rows=orderRows();
   const c=document.createElement('canvas');c.width=FICHA_W;c.height=FICHA_H;const ctx=c.getContext('2d');ctx.__s=1;
@@ -25,14 +30,15 @@ async function renderFicha(){await fichaFonts();const code=orderCode(),a=orderAg
   /* specs card */
   const kx=540,ky=top,kw=448,kh=640;ctx.save();ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=30;ctx.shadowOffsetY=14;ctx.fillStyle=CR;rr(ctx,kx,ky,kw,kh,22);ctx.fill();ctx.restore();
   ctx.textAlign='left';ctx.fillStyle=WI;ctx.font=`700 18px ${sans}`;ctx.letterSpacing='5px';ctx.fillText('TU DELULU',kx+34,ky+52);ctx.letterSpacing='0px';
-  const sw={1:null,2:dlPick(DL_LEATHERS,ORD.leather)[2],3:dlPick(DL_ELASTICS,ORD.elastic)[2]},rowH=(kh-90-118)/rows.length;
+  const swc={'Color del cuero':dlPick(DL_LEATHERS,ORD.leather)[2],'Color del elástico':dlPick(DL_ELASTICS,ORD.elastic)[2]},rowH=(kh-90-118)/rows.length;
   const charmImg=ORD.charm!=='none'&&CHARM_PHOTOS[ORD.charm]?await loadImg(CHARM_PHOTOS[ORD.charm].src):null;
   for(let i=0;i<rows.length;i++){const[k,v,stp]=rows[i],y=ky+80+i*rowH;
     if(i){ctx.save();ctx.strokeStyle='rgba(34,64,59,.18)';ctx.setLineDash([6,6]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(kx+34,y);ctx.lineTo(kx+kw-34,y);ctx.stroke();ctx.restore()}
     ctx.fillStyle=WI;ctx.font=`700 15px ${sans}`;ctx.letterSpacing='3px';ctx.fillText(k.toUpperCase(),kx+34,y+36);ctx.letterSpacing='0px';
-    const hasIcon=(i===1||i===2)||(i===3&&charmImg);ctx.fillStyle=INK;ctx.font=`400 34px ${serif}`;ctx.fillText(fitText(ctx,v,kw-68-(hasIcon?70:0)),kx+34,y+80);
-    if(i===1||i===2)fichaSwatch(ctx,kx+kw-62,y+rowH/2,24,sw[i+1]);
-    if(i===3&&charmImg){const k=Math.min(64/charmImg.naturalWidth,64/charmImg.naturalHeight),w=charmImg.naturalWidth*k,h=charmImg.naturalHeight*k;ctx.drawImage(charmImg,kx+kw-62-w/2,y+rowH/2-h/2,w,h)}}
+    const isIns=k==='Por dentro',hasIcon=!!swc[k]||isIns||(k==='Charm'&&charmImg),vy=y+Math.min(80,rowH-14);ctx.fillStyle=INK;ctx.font=`400 ${isIns?25:31}px ${serif}`;ctx.fillText(fitText(ctx,v,kw-68-(hasIcon?(isIns?96:70):0)),kx+34,vy);
+    if(swc[k])fichaSwatch(ctx,kx+kw-62,y+rowH/2+4,22,swc[k]);
+    if(isIns)orderInserts().forEach((t,j)=>fichaPage(ctx,kx+kw-118+j*30,y+rowH/2-14,24,32,t));
+    if(k==='Charm'&&charmImg){const k=Math.min(64/charmImg.naturalWidth,64/charmImg.naturalHeight),w=charmImg.naturalWidth*k,h=charmImg.naturalHeight*k;ctx.drawImage(charmImg,kx+kw-62-w/2,y+rowH/2-h/2,w,h)}}
   /* price */
   const py=ky+kh-118;ctx.fillStyle=G;rr(ctx,kx+20,py,kw-40,98,16);ctx.fill();
   ctx.fillStyle=Y;ctx.font=`700 15px ${sans}`;ctx.letterSpacing='3px';ctx.fillText('TOTAL',kx+44,py+40);ctx.letterSpacing='0px';
