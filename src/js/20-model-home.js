@@ -37,7 +37,7 @@ function templatePages(tpl,bgType,W,H){
   }}
 function newAgenda(o){const a={id:uid(),name:o.name||'Mi agenda',type:o.type||'blank',size:o.size||'a5',orient:o.orient||'port',created:Date.now(),updated:Date.now(),cover:coverDefaults(),pageBg:o.pageBg||'lines'};
   Object.assign(a.cover,{color:o.color||a.cover.color,texture:o.texture||a.cover.texture});a.cover.elastic.color=o.elastic||a.cover.elastic.color;
-  if(o.charm)a.cover.charms=o.charm==='none'?[]:[{id:uid(),shape:o.charm,material:'oro',color:'#c4878c',size:o.charm==='croissant'?1.15:1,letter:(o.initials||o.name||'D')[0].toUpperCase()}];
+  if(o.charm)a.cover.charms=o.charm==='none'?[]:[{id:uid(),shape:o.charm,material:'oro',color:'#c4878c',size:typeof CHARM_PHOTOS!=='undefined'&&CHARM_PHOTOS[o.charm]?1.75:o.charm==='croissant'?1.15:1,letter:(o.initials||o.name||'D')[0].toUpperCase()}];
   const [W,H]=dims(a);a.pages=a.type.startsWith('pack:')?[...PACKS.find(p=>'pack:'+p.id===a.type).pages.map((_,i)=>packPage(a.type.slice(5),i,W,H)),pg(a.pageBg),pg(a.pageBg)]:templatePages(a.type,a.pageBg,W,H);
   a.cover.elements=o.noTitle?[]:[{id:uid(),type:'text',text:a.name,x:W*.08,y:H*.24,w:W*.7,h:90,r:0,font:'"Bodoni Moda", serif',it:true,fs:Math.min(46,Math.max(26,560/Math.max(8,a.name.length))),al:'center',fx:'grabado',color:'#3b2d26'}];
   if(o.initials)a.cover.elements.push(initialsEl(o.initials,W,H));

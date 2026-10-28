@@ -125,6 +125,11 @@ function drawBand(ctx,a,W,H,back){const e=a.cover.elastic,t=e.width||9,c=e.color
   ctx.restore()}
 async function drawCharms(ctx,a,W,H){const e=a.cover.elastic,list=a.cover.charms||[],offs=[0,-22,22,-42,42,-62],vert=e.orient!=='horizontal';
   for(let i=0;i<list.length;i++){const c=list[i],s=46*(c.size||1);const cx=vert?W*(e.pos??.84)+offs[i%6]*.6:W*.5+offs[i%6];const cy=vert?H*.42+i*8:H*(e.pos??.6)-4;
+    const ph=typeof CHARM_PHOTOS!=='undefined'&&CHARM_PHOTOS[c.shape];
+    if(ph){const img=await loadImg(ph.src);if(!img)continue;const u=s/40,k=Math.min(32/ph.w,40/ph.h)*u,iw=ph.w*k,ih=ph.h*k;
+      ctx.save();ctx.translate(cx,cy-s*.12);ctx.rotate((i%2?4:-5)*Math.PI/180);ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=2*u*ctx.__s;ctx.shadowOffsetY=2*u*ctx.__s;
+      ctx.strokeStyle='#c9a24a';ctx.lineWidth=2*u;ctx.beginPath();ctx.arc(0,6*u,4*u,0,7);ctx.stroke();ctx.lineWidth=1.6*u;ctx.setLineDash([2*u,1.2*u]);ctx.beginPath();ctx.moveTo(0,10*u);ctx.lineTo(0,18*u);ctx.stroke();ctx.setLineDash([]);
+      ctx.drawImage(img,-iw/2,17*u,iw,ih);ctx.restore();continue}
     const img=await loadImg(svgURL(charmSVG(c,Math.ceil(s*ctx.__s*1.5))));if(!img)continue;
     ctx.save();ctx.translate(cx,cy-s*.12);ctx.rotate((i%2?4:-5)*Math.PI/180);ctx.drawImage(img,-s/2,0,s,s*1.5);ctx.restore()}}
 async function renderCover(ctx,a,W,H,back){const c=a.cover;ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();

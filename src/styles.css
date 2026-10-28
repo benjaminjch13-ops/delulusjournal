@@ -627,3 +627,28 @@ a.btn{text-decoration:none}
 @media (max-width:700px){.shop-foot{grid-template-columns:1fr}.shop-link{display:none}}
 .ord-ph{width:72px}
 .shop-nav a.btn{color:var(--ink)}
+/* resumen de lo elegido + sorprendeme + precios */
+.ord-pick{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:2px}
+.ord-pick .pk{display:inline-flex;align-items:center;gap:6px;border:1.5px solid rgba(0,0,0,.08);background:rgba(255,255,255,.55);color:#22403B;border-radius:999px;padding:4px 11px 4px 5px;font:600 12.5px var(--f-body);line-height:1;min-height:30px}
+.ord.s-green .ord-pick .pk{background:rgba(255,255,255,.88)}
+.ord-pick .pk b{padding:0 2px 0 6px}
+.ord-pick .pk i{width:20px;height:20px;border-radius:50%;box-shadow:inset 0 0 0 2px #fff,0 0 0 1px rgba(0,0,0,.12);flex:none}
+.ord-pick .pk.cur{border-color:var(--oa);box-shadow:0 0 0 2px var(--oa)}
+.ord-pick .pk-c{width:22px;height:22px;display:grid;place-items:center}
+.ord-pick .pk-c img{max-width:22px;max-height:22px}
+.ord-pick .pk-c .nocharm{font-size:14px;height:auto}
+.ord-pick .pk-q{font:400 20px "Bodoni Moda",serif;color:var(--ot);padding:0 6px}
+.pk-rand{border:0;background:none;color:var(--oa);font:400 19px "Caveat Brush",cursive;padding:2px 6px;cursor:pointer}
+.pk-rand:hover{transform:rotate(-3deg) scale(1.05)}
+.ord-rand0{align-self:flex-start;border:1.5px dashed var(--oh);background:none;color:var(--oh);border-radius:999px;padding:8px 16px;font:400 20px "Caveat Brush",cursive;cursor:pointer}
+.ord-rand0:hover{background:rgba(255,255,255,.08)}
+.ord-price{margin:0;font:500 15px var(--f-body);letter-spacing:.04em}
+.ord-price b{font:400 24px "Bodoni Moda",serif;color:var(--oh);margin-left:4px}
+.ord-price i{font-style:normal;opacity:.5;margin:0 6px}
+.sz-q{font:400 24px "Bodoni Moda",serif;color:#22403B;margin-top:4px}
+.ord-ship{margin:-4px 0 0;font:600 13px var(--f-body);opacity:.75}
+.ord-charms img{height:46px;max-width:64px;object-fit:contain;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.ord-sum{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin:6px 0 10px;padding:12px 14px;background:#386660;color:#F3EEE6;border-radius:12px;font:500 14px var(--f-body)}
+.ord-sum em{font-style:normal;text-align:right}
+.ord-sum b{font:400 26px "Bodoni Moda",serif;color:#F6E08A;margin-top:4px}
+.ord-sum b:last-child{text-align:right}

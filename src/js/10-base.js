@@ -119,7 +119,7 @@ const PATTERN_NAMES=[['none','Ninguno'],['rombos','Rombos'],['puntos','Puntos'],
 function matFill(mat,col,id){
   const g={oro:['#fbeaa0','#d9b04a','#9c7424'],plata:['#ffffff','#c9ccd1','#7f858c'],bronce:['#f0c08a','#b47a43','#6e431f'],perla:['#ffffff','#f6e9ea','#d8c7c9'],esmalte:[shade(col,.35),col,shade(col,-.3)]}[mat]||['#fff','#ccc','#888'];
   return `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g[0]}"/><stop offset=".5" stop-color="${g[1]}"/><stop offset="1" stop-color="${g[2]}"/></linearGradient>`}
-function charmSVG(ch,w=40){
+function charmSVG(ch,w=40){if(typeof CHARM_PHOTOS!=='undefined'&&CHARM_PHOTOS[ch.shape])return charmPhotoSVG(ch,w);
   const id='g'+uid(), f=`url(#${id})`, edge=ch.material==='esmalte'?shade(ch.color,-.4):'rgba(60,40,20,.5)';
   const metal=ch.material==='esmalte'?'#d9b04a':ch.material==='perla'?'#d9c8a0':null;
   let shape='';const S=`fill="${f}" stroke="${edge}" stroke-width="1"`;

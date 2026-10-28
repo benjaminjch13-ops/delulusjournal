@@ -29,7 +29,7 @@ src/js/*.js        por módulos (se cargan en orden por nombre)
 build.mjs          junta todo en dist/index.html (minificado)
 ```
 
-Para cambiar los colores de elástico, charms o el usuario de Instagram, editá `src/js/05-brand.js`.
+Precios, tamaños, cueros, elásticos e Instagram están en `src/js/05-brand.js` (`DL_SIZES`, `DL_SHIP`). Los charms son fotos reales recortadas en `src/js/06-charms.js`. La imagen para compartir el enlace es `public/og.jpg`.
 
 ## Correr y publicar
 
