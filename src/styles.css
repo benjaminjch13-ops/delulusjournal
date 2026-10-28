@@ -748,3 +748,79 @@ a.btn{text-decoration:none}
 .lf-page{position:absolute;left:20px;right:0;top:16px;bottom:16px;display:flex;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .lf-page .in-pg{--lh:max(7px,calc(var(--bh)/26))}
 .ord-inside.anim .in-sp{box-shadow:0 26px 30px -18px rgba(0,0,0,.45)}
+
+/* ================= móvil: más aire, menos encimado ================= */
+.ord-prog{display:none}
+@media (max-width:860px){
+  .ord{gap:14px;padding:10px 16px 0;position:relative}
+  .ord-prog{display:block;position:absolute;left:0;right:0;top:0;height:3px;background:rgba(0,0,0,.08)}
+  .ord-prog::after{content:"";position:absolute;left:0;top:0;bottom:0;width:calc(var(--p)*100%);background:var(--oh);border-radius:0 3px 3px 0;transition:width .4s}
+  .ord-top{padding-top:6px;font-size:10.5px;letter-spacing:.18em}
+  .ord-top .ord-eb:first-of-type{display:none}
+  .ord-x{padding:4px 6px 4px 0;font-size:13px}
+  .ord-main{gap:18px}
+  .ord-logo{display:none}
+  /* el escenario de la libreta */
+  .ord-stage,.ord-stage:has(.ord-inside){height:auto;min-height:0;padding:22px 10px 12px;gap:10px;border-radius:18px;overflow:hidden}
+  .ord-stage .corner{width:26px;height:26px}
+  .corner.tl{left:8px;top:8px;border-left-width:3px;border-top-width:3px}
+  .corner.br{right:8px;bottom:8px;border-right-width:3px;border-bottom-width:3px}
+  .star.a{right:9%;top:10%;font-size:18px}.star.b{left:7%;bottom:12%;font-size:12px}
+  .ord-book{margin-top:6px}
+  .ord-stage-ft{flex-direction:row;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .ord-drag{font-size:15px}
+  .ord-view{padding:5px 12px;font-size:12px}
+  .in-tabs button{padding:4px 10px 4px 4px;font-size:12px}
+  .in-tabs button b{width:18px;height:18px}
+  /* lo elegido: una sola fila que se desliza */
+  .ord-pick{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 22px),transparent)}
+  .ord-pick::-webkit-scrollbar{display:none}
+  .ord-pick .pk{flex:none;min-height:28px;font-size:12px;padding:3px 10px 3px 4px}
+  .ord-pick .pk-q{flex:none;font-size:18px;order:-1;padding:0 4px 0 0}
+  .pk-rand{flex:none;font-size:17px;white-space:nowrap}
+  /* textos */
+  .ord-copy{gap:10px}
+  .ord-copy h2{font-size:clamp(30px,8.6vw,38px);line-height:1.05}
+  .ord-hand{font-size:21px}
+  .ord-steps{font-size:11px;letter-spacing:.12em;line-height:1.7}
+  .ord-p{font-size:15px}
+  .ord-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 0}
+  .ord-rand0{font-size:18px;padding:7px 14px}
+  .ord-note{font-size:19px}
+  /* tarjetas de tamaño */
+  .ord-sizes{gap:10px;flex-wrap:nowrap}
+  .ord-size{padding:10px 12px;border-radius:14px}
+  .ord-size .sz-b{min-height:118px;padding-bottom:6px}
+  .ord-size b{font-size:28px}.ord-size small{font-size:10px;letter-spacing:.1em}
+  .ord-size .ord-hand.sm{font-size:15px}.sz-q{font-size:20px}
+  /* colores y charms */
+  .ord-sw{gap:12px 6px;display:grid;grid-template-columns:repeat(4,1fr)}
+  .ord-sw button{min-width:0}
+  .ord-sw i{width:50px;height:50px;border-width:3px}
+  .ord-sw span{font-size:15px;text-align:center;line-height:1.1}
+  .ord-charms{grid-template-columns:repeat(4,1fr);gap:6px}
+  .ord-charms button{padding:8px 2px 6px;border-radius:12px}
+  .ord-charms img{height:38px}
+  .ord-charms span{font-size:14px;line-height:1.1}
+  .ins-seg{width:100%}.ins-seg button{flex:1;justify-content:center;padding:7px 6px;font-size:12.5px}
+  .ins-row{gap:4px}
+  /* resumen */
+  .ord-card{padding:14px 14px 6px}
+  .ord-row{gap:10px;padding:9px 0}
+  .ord-row .ck{width:24px;height:24px;border-radius:7px;font-size:12px}
+  .ord-row span{font-size:16px;white-space:nowrap}
+  .ord-row em{font-size:16px;flex:1;text-align:right}
+  .ord-dm{width:100%;padding:15px 16px;font-size:14px;letter-spacing:.12em}
+  .ord-more .btn{font-size:12.5px}
+  /* barra de abajo */
+  .ord-nav{margin:0 -16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--ob) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid rgba(0,0,0,.06);gap:8px}
+  .ord-dots{display:none}
+  .ord-nav>.btn,.ord-nav>span{flex:1}
+  .ord-nav>.btn{justify-content:center;min-height:46px;padding:10px 12px}
+  .ord-nav .ord-next{flex:1.6}
+  /* opiniones y pie */
+  .revs{padding:40px 16px 48px}
+  .revs-list{grid-template-columns:1fr}
+  .shop-foot{padding:32px 20px 24px;gap:22px}
+}
+@media (max-width:380px){.ord-sw{grid-template-columns:repeat(3,1fr)}.ord-charms{grid-template-columns:repeat(3,1fr)}}

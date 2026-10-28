@@ -46,7 +46,7 @@ function stageHTML(bw,open=stageOpen(),anim=false){
 const STAGE_DECO='<span class="corner tl"></span><span class="corner br"></span><span class="star a">★</span><span class="star b">★</span>';
 const calm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* abre o cierra la libreta con animación cuando cambia lo que se ve */
-function paintStage(force){const st=$('#ordStage');if(!st)return;const bw=innerWidth>860?250:150,want=stageOpen(),prev=ORD.shown;ORD.shown=want;
+function paintStage(force){const st=$('#ordStage');if(!st)return;const bw=innerWidth>860?250:Math.min(130,Math.round(innerWidth*.31)),want=stageOpen(),prev=ORD.shown;ORD.shown=want;
   const tok=ORD.anim=(ORD.anim||0)+1;
   if(force||prev===undefined||prev===want||calm()){st.innerHTML=STAGE_DECO+stageHTML(bw,want);return}
   st.innerHTML=STAGE_DECO+stageHTML(bw,true,true);const box=$('.ord-inside',st),leafEl=$('.in-leaf',st),sp=$('.in-sp',st),tabs=$('.in-tabs',st),ft=$('.ord-stage-ft',st);
@@ -110,7 +110,7 @@ function renderOrder(){const s=ORD.step,st=ORD_STEPS[s],root=$('#ordRoot'),wide=
      <p class="ord-ig">@${BRAND.ig.toUpperCase()}</p>`}
   const dots=ORD_STEPS.map((_,i)=>`<i class="${i===s?'on':''}"></i>`).join('');
   root.className='ord s-'+st.bg;
-  root.innerHTML=`<header class="ord-top">${s?`<button type="button" class="ord-x" id="ordClose">${ico('back')}<span>Inicio</span></button>`:'<b class="ord-ph"></b>'}<span class="ord-eb">DELULU JOURNAL</span><span class="ord-eb">${s===0?'CÓMO COMPRAR':s===ORD_LAST?'¡LISTO!':`PASO ${s} DE ${ORD_N}`}</span></header>
+  root.innerHTML=`<i class="ord-prog" style="--p:${s/ORD_LAST}" aria-hidden="true"></i><header class="ord-top">${s?`<button type="button" class="ord-x" id="ordClose">${ico('back')}<span>Inicio</span></button>`:'<b class="ord-ph"></b>'}<span class="ord-eb">DELULU JOURNAL</span><span class="ord-eb">${s===0?'CÓMO COMPRAR':s===ORD_LAST?'¡LISTO!':`PASO ${s} DE ${ORD_N}`}</span></header>
    <div class="ord-main"><div class="ord-stage" id="ordStage"></div>
     <div class="ord-copy">${s>=1&&s<ORD_LAST?ordPick():''}${head}${body}${note?`<p class="ord-note">${note}</p>`:''}</div></div>
    <footer class="ord-nav">${s>0?`<button type="button" class="btn" id="ordPrev">${ico('left')}Atrás</button>`:'<span></span>'}<div class="ord-dots" aria-hidden="true">${dots}</div>${s<ORD_LAST?`<button type="button" class="btn ord-next" id="ordNext">${s===0?'Empezar':s===ORD_N?'Ver mi pedido':'Siguiente'} →</button>`:`<button type="button" class="btn" id="ordAgain">Armar otra</button>`}</footer>`;paintStage()}
