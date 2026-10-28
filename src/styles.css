@@ -16,6 +16,7 @@
   --accent:#d79aa0; --accent-ink:#2b1c1c; --shadow:0 18px 40px -18px rgba(0,0,0,.8); color-scheme:dark}
 [hidden]{display:none!important}
 html,body{height:100%;margin:0}
+body{font-family:var(--f-body);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -528,7 +529,7 @@ a.dr-item{text-decoration:none;color:inherit}
 .ord-x{display:inline-flex;align-items:center;gap:4px;border:0;background:none;color:inherit;font:600 13px var(--f-body);letter-spacing:0;padding:6px 8px;border-radius:999px}
 .ord-x:hover{background:rgba(0,0,0,.06)}
 .ord-main{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(18px,4vw,48px);align-items:center;max-width:1100px;width:100%;margin:0 auto}
-.ord-stage{position:relative;align-self:center;height:clamp(300px,calc(100dvh - 210px),560px);border-radius:14px;background:repeating-linear-gradient(135deg,var(--ostripe) 0 16px,transparent 16px 32px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.ord-stage{position:relative;align-self:center;height:clamp(300px,calc(100dvh - 210px),560px);border-radius:14px;background:repeating-linear-gradient(135deg,var(--ostripe) 0 16px,transparent 16px 32px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .ord-stage.dragging{cursor:grabbing}
 .ord-stage.dragging .b3,.ord-stage:active .b3{animation:none}
 .corner{position:absolute;width:44px;height:44px;border:0 solid var(--oc)}
@@ -824,3 +825,14 @@ a.btn{text-decoration:none}
   .shop-foot{padding:32px 20px 24px;gap:22px}
 }
 @media (max-width:380px){.ord-sw{grid-template-columns:repeat(3,1fr)}.ord-charms{grid-template-columns:repeat(3,1fr)}}
+
+/* avisos arriba de la barra de abajo en el celular */
+@media (max-width:860px){body:has(#order .ord-nav) .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px));max-width:calc(100vw - 32px);text-align:center;border-radius:16px}}
+.ord-copy h2:focus{outline:none}
+/* revisión: toques más cómodos, textos legibles, libreta visible al bajar en compu */
+.ord-size small{font-size:11px}
+.ord-x{min-height:40px}
+.ord-view{min-height:34px}
+.ord-dm2{display:inline-flex;align-items:center;min-height:42px}
+.sf-col a{min-height:36px}
+@media (min-width:861px){.ord-main{align-items:start}.ord-stage{position:sticky;top:12px;align-self:start}}

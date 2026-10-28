@@ -40,13 +40,15 @@ function insideHTML(w,anim){const a=orderAgenda(),[W,H]=dims(a),bw=Math.round(w*
    <div class="in-tilt"><div class="in-3d"><div class="in-sp" style="background:${swBg(lc)}">${iris}<span class="in-rv l"></span><span class="in-rv r"></span>
     <div class="in-stack">${[2,1].map(d=>`<div class="in-under d${d}"></div>`).join('')}<div class="in-book">${leaf(ins[k],'l')}${leaf(ins[k],'r')}<span class="in-fold"></span></div></div></div>${cover}</div></div>
    <div class="in-tabs" role="tablist" aria-label="Libritos">${ins.map((t,i)=>`<button type="button" role="tab" aria-selected="${i===k}" class="${i===k?'on':''}" data-bk="${i}"><b>${i+1}</b>${insName(t)}</button>`).join('')}</div></div>`}
+/* ancho de la libreta según la pantalla (cabe abierta en el recuadro) */
+const stageBW=()=>innerWidth>860?Math.min(250,Math.round(innerWidth*.19)):Math.min(200,Math.round(innerWidth*.31));
 const stageOpen=()=>ORD.step===2||ORD.view==='open';
 function stageHTML(bw,open=stageOpen(),anim=false){
   return `${open?insideHTML(bw,anim):ordPreview(bw)}<div class="ord-stage-ft">${open?'':'<span class="ord-drag">arrastrá para girarla</span>'}${ORD.step===2?'':`<button type="button" class="ord-view" id="ordView">${open?'Ver cerrada':'Ver por dentro ✦'}</button>`}</div>`}
 const STAGE_DECO='<span class="corner tl"></span><span class="corner br"></span><span class="star a">★</span><span class="star b">★</span>';
 const calm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* abre o cierra la libreta con animación cuando cambia lo que se ve */
-function paintStage(force){const st=$('#ordStage');if(!st)return;const bw=innerWidth>860?250:Math.min(130,Math.round(innerWidth*.31)),want=stageOpen(),prev=ORD.shown;ORD.shown=want;
+function paintStage(force){const st=$('#ordStage');if(!st)return;const bw=stageBW(),want=stageOpen(),prev=ORD.shown;ORD.shown=want;
   const tok=ORD.anim=(ORD.anim||0)+1;
   if(force||prev===undefined||prev===want||calm()){st.innerHTML=STAGE_DECO+stageHTML(bw,want);return}
   st.innerHTML=STAGE_DECO+stageHTML(bw,true,true);const box=$('.ord-inside',st),leafEl=$('.in-leaf',st),sp=$('.in-sp',st),tabs=$('.in-tabs',st),ft=$('.ord-stage-ft',st);
@@ -77,7 +79,7 @@ function ordPick(){const s=ORD.step,l=dlPick(DL_LEATHERS,ORD.leather),e=dlPick(D
 function refreshPick(){const p=$('.ord-pick',ordRoot);if(p)p.outerHTML=ordPick()}
 function surprise(){const r=l=>l[Math.floor(Math.random()*l.length)][0];ORD.leather=r(DL_LEATHERS);ORD.elastic=r(DL_ELASTICS);ORD.charm=r(DL_CHARMS.filter(x=>x[0]!=='none'));ORD.ins5=[0,1,2].map(()=>r(DL_INSERTS));if(ORD.step===0)ORD.size=r(DL_SIZES);ORD.code=null}
 const ordSw=(k,list)=>`<div class="ord-sw" role="radiogroup">${list.map(([id,n,c])=>`<button type="button" role="radio" aria-checked="${ORD[k]===id}" class="${ORD[k]===id?'on':''}" data-o="${k}" data-v="${id}"><i style="background:${swBg(c)}"></i><span>${n}</span></button>`).join('')}</div>`;
-function renderOrder(){const s=ORD.step,st=ORD_STEPS[s],root=$('#ordRoot'),wide=innerWidth>860,bw=wide?250:150;
+function renderOrder(){const s=ORD.step,st=ORD_STEPS[s],root=$('#ordRoot'),wide=innerWidth>860,bw=stageBW();
   let head='',body='',note='';
   if(s===0){head=`<div class="ord-logo">${brandLogo('xl')}</div><h2>¿Cómo armo mi <em>Delulu</em>?</h2><p class="ord-hand">en 5 pasitos ✦</p>`;
     body=`<p class="ord-steps">TAMAÑO <b>✦</b> POR DENTRO <b>✦</b> CUERO <b>✦</b> ELÁSTICO <b>✦</b> CHARM</p><p class="ord-p">Cuero artesanal, hecho a mano en Guatemala. Armala acá, mirala en 3D, descargá tu ficha y mandala por DM.</p>
@@ -109,7 +111,7 @@ function renderOrder(){const s=ORD.step,st=ORD_STEPS[s],root=$('#ordRoot'),wide=
      <div class="ord-more"><button type="button" class="btn sm" id="ordFicha">${ico('image')}Ver mi ficha</button><button type="button" class="btn sm" id="ordCopy">${ico('copy')}Copiar mi pedido</button></div>
      <p class="ord-ig">@${BRAND.ig.toUpperCase()}</p>`}
   const dots=ORD_STEPS.map((_,i)=>`<i class="${i===s?'on':''}"></i>`).join('');
-  root.className='ord s-'+st.bg;
+  root.className='ord s-'+st.bg;head=head.replace('<h2>','<h2 tabindex="-1">');
   root.innerHTML=`<i class="ord-prog" style="--p:${s/ORD_LAST}" aria-hidden="true"></i><header class="ord-top">${s?`<button type="button" class="ord-x" id="ordClose">${ico('back')}<span>Inicio</span></button>`:'<b class="ord-ph"></b>'}<span class="ord-eb">DELULU JOURNAL</span><span class="ord-eb">${s===0?'CÓMO COMPRAR':s===ORD_LAST?'¡LISTO!':`PASO ${s} DE ${ORD_N}`}</span></header>
    <div class="ord-main"><div class="ord-stage" id="ordStage"></div>
     <div class="ord-copy">${s>=1&&s<ORD_LAST?ordPick():''}${head}${body}${note?`<p class="ord-note">${note}</p>`:''}</div></div>
@@ -117,16 +119,23 @@ function renderOrder(){const s=ORD.step,st=ORD_STEPS[s],root=$('#ordRoot'),wide=
 function refreshPreview(force){paintStage(force)}
 
 const ordRoot=$('#ordRoot');
+/* cambiar de paso: queda en el historial (el botón atrás del teléfono regresa un paso) y vuelve arriba */
+function goStep(n,{push=true}={}){if(n===ORD.step&&$('#ordRoot').innerHTML){$('#order').scrollTo({top:0,behavior:'smooth'});return}ORD.step=n;
+  if(push)history.pushState({ord:n},'',n?'#pedir':location.pathname+location.search);renderOrder();$('#order').scrollTop=0;scrollTo(0,0);
+  if(innerWidth<=860)requestAnimationFrame(()=>$('#ordRoot .ord-copy h2')?.focus?.({preventScroll:true}))}
+addEventListener('popstate',e=>{const h=location.hash;if(h==='#admin'||h==='#opiniones')return;const n=e.state&&typeof e.state.ord==='number'?e.state.ord:h==='#pedir'?1:0;closeModals();goStep(n,{push:false})});
+const closeModals=()=>$$('#modals .modal').forEach(m=>m.remove());
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modals .modal')){e.preventDefault();$$('#modals .modal').pop().remove()}});
 ordRoot.addEventListener('click',async e=>{const t=e.target;
-  if(t.closest('#ordClose')){ORD.step=0;renderOrder();scrollTo(0,0);$('#order').scrollTop=0;return}
-  if(t.closest('#ordNext')){ORD.step=Math.min(ORD_LAST,ORD.step+1);renderOrder();ordRoot.scrollTop=0;return}
-  if(t.closest('#ordPrev')){ORD.step=Math.max(0,ORD.step-1);renderOrder();return}
-  if(t.closest('#ordAgain')){ORD.step=1;ORD.code=null;renderOrder();return}
+  if(t.closest('#ordClose')){goStep(0);return}
+  if(t.closest('#ordNext')){goStep(Math.min(ORD_LAST,ORD.step+1));return}
+  if(t.closest('#ordPrev')){goStep(Math.max(0,ORD.step-1));return}
+  if(t.closest('#ordAgain')){ORD.code=null;goStep(1);return}
   if(t.closest('#ordView')){ORD.view=ORD.view==='open'?'closed':'open';refreshPreview();return}
   const bk=t.closest('[data-bk]');if(bk){ORD.bk=+bk.dataset.bk;refreshPreview(true);$('#ordStage .in-book')?.animate([{opacity:.2,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:320,easing:'ease-out'});return}
   const ins=t.closest('[data-ins]');if(ins){const i=+ins.dataset.ins;ORD.ins5[i]=ins.dataset.v;ORD.bk=i;ORD.code=null;$$(`[data-ins="${i}"]`,ordRoot).forEach(x=>{const on=x===ins;x.classList.toggle('on',on);x.setAttribute('aria-checked',on)});refreshPreview(true);refreshPick();return}
-  const g=t.closest('[data-goto]');if(g){ORD.step=+g.dataset.goto;renderOrder();return}
-  if(t.closest('#ordRand')){surprise();if(ORD.step===0)ORD.step=ORD_LAST;renderOrder();const b=$('#ordStage .b3');b?.animate?.([{transform:'scale(.92)'},{transform:'scale(1.03)'},{transform:'scale(1)'}],{duration:420,easing:'ease-out'});toast('¡Así sería tu Delulu! Cambiá lo que quieras ✦');return}
+  const g=t.closest('[data-goto]');if(g){goStep(+g.dataset.goto);return}
+  if(t.closest('#ordRand')){surprise();if(ORD.step===0)goStep(ORD_LAST);else renderOrder();const b=$('#ordStage .b3');b?.animate?.([{transform:'scale(.92)'},{transform:'scale(1.03)'},{transform:'scale(1)'}],{duration:420,easing:'ease-out'});toast('¡Así sería tu Delulu! Cambiá lo que quieras ✦');return}
   const o=t.closest('[data-o]');if(o){ORD[o.dataset.o]=o.dataset.v;ORD.code=null;if(o.dataset.o==='size')renderOrder();else{$$(`[data-o="${o.dataset.o}"]`,ordRoot).forEach(x=>{x.classList.toggle('on',x===o);x.setAttribute('aria-checked',x===o)});refreshPreview();refreshPick()}return}
   if(t.closest('#ordCopy')){const txt=orderText();try{await navigator.clipboard.writeText(txt);toast('Pedido copiado. Pegalo en el DM')}catch(_){showOrderText(txt)}return}
   if(t.closest('#ordFicha')){openFicha();return}
@@ -135,8 +144,8 @@ ordRoot.addEventListener('click',async e=>{const t=e.target;
 ordRoot.addEventListener('input',e=>{const f=e.target.dataset?.f;if(!f)return;ORD.ship[f]=e.target.value;e.target.classList.remove('bad');saveShip()});
 /* drag the preview to turn the notebook */
 ordRoot.addEventListener('pointerdown',e=>{const st=e.target.closest('#ordStage');if(!st||e.target.closest('button'))return;const b=$('.b3',st);if(!b)return;e.preventDefault();const x0=e.clientX,r0=ORD.ry;st.classList.add('dragging');
-  const mv=m=>{ORD.ry=r0+(m.clientX-x0)*.6;b.style.setProperty('--ry',ORD.ry+'deg')};const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);st.classList.remove('dragging')};
-  document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up)});
+  const mv=m=>{ORD.ry=r0+(m.clientX-x0)*.6;b.style.setProperty('--ry',ORD.ry+'deg')};const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);st.classList.remove('dragging')};
+  document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)});
 /* al abrir el teclado del celular la ventana cambia de alto: solo se redibuja si cambió el ancho de verdad y nadie está escribiendo */
 let ordW=innerWidth;addEventListener('resize',()=>{if(Math.abs(innerWidth-ordW)<40)return;const typing=document.activeElement?.matches?.('input,textarea,select');if(typing)return;ordW=innerWidth;if($('#order').classList.contains('show'))renderOrder()});
 function showOrderText(txt){const m=modal(`<header><h2>Tu pedido</h2><div class="spacer"></div><button class="btn ghost icon" data-x aria-label="Cerrar">${ico('x')}</button></header>
