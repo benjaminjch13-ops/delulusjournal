@@ -23,7 +23,7 @@ const ordSw=(k,list)=>`<div class="ord-sw" role="radiogroup">${list.map(([id,n,c
 function renderOrder(){const s=ORD.step,st=ORD_STEPS[s],root=$('#ordRoot'),wide=innerWidth>860,bw=wide?250:150;
   let head='',body='',note='';
   if(s===0){head=`<div class="ord-logo">${brandLogo('xl')}</div><h2>¿Cómo armo mi <em>Delulu</em>?</h2><p class="ord-hand">en 4 pasitos ✦</p>`;
-    body=`<p class="ord-steps">TAMAÑO <b>✦</b> COLOR <b>✦</b> ELÁSTICO <b>✦</b> CHARM</p><p class="ord-p">Cuero artesanal, hecho a mano en Guatemala. Armala acá, mirala en 3D y pedila por DM. Mientras llega, podés diseñar tu versión digital.</p>`}
+    body=`<p class="ord-steps">TAMAÑO <b>✦</b> COLOR <b>✦</b> ELÁSTICO <b>✦</b> CHARM</p><p class="ord-p">Cuero artesanal, hecho a mano en Guatemala. Armala acá, mirala en 3D, descargá tu ficha y mandala por DM.</p>`}
   if(s===1){head=`<p class="ord-hand">paso 01</p><h2>Elegí el <em>tamaño</em></h2>`;
     body=`<div class="ord-sizes">${DL_SIZES.map(([id,l,d,t])=>{const a=orderAgenda({...ORD,size:id});return `<button type="button" class="ord-size${ORD.size===id?' on':''}" data-o="size" data-v="${id}" aria-pressed="${ORD.size===id}"><span class="sz-b">${book3D(a,Math.round((wide?120:84)*dims(a)[0]/560),{ry:20,rx:5})}</span><b>${l}</b><small>${d.toUpperCase()}</small><span class="ord-hand sm">${t}</span></button>`}).join('')}</div>`}
   if(s===2){head=`<p class="ord-hand">paso 02</p><h2>Elegí el <em>color</em><br>del cuero</h2>`;body=ordSw('leather',DL_LEATHERS)}
@@ -37,11 +37,11 @@ function renderOrder(){const s=ORD.step,st=ORD_STEPS[s],root=$('#ordRoot'),wide=
      <ol class="ord-how"><li><b>Descargá tu ficha técnica</b>: es una imagen con todo tu pedido.</li><li><b>Mandánosla por DM</b> a @${BRAND.ig} y te confirmamos.</li></ol>
      <button type="button" class="ord-dm" id="ordDL">${ico('dl')}DESCARGAR MI FICHA</button>
      <a class="ord-dm2" href="${BRAND.dm}" target="_blank" rel="noopener" id="ordDM">PEDIDOS POR DM →</a>
-     <div class="ord-more"><button type="button" class="btn sm" id="ordFicha">${ico('image')}Ver mi ficha</button><button type="button" class="btn sm" id="ordCopy">${ico('copy')}Copiar mi pedido</button><button type="button" class="btn sm" id="ordDigital">${ico('book')}Crearla en digital</button></div>
+     <div class="ord-more"><button type="button" class="btn sm" id="ordFicha">${ico('image')}Ver mi ficha</button><button type="button" class="btn sm" id="ordCopy">${ico('copy')}Copiar mi pedido</button></div>
      <p class="ord-ig">@${BRAND.ig.toUpperCase()}</p>`}
   const dots=ORD_STEPS.map((_,i)=>`<i class="${i===s?'on':''}"></i>`).join('');
   root.className='ord s-'+st.bg;
-  root.innerHTML=`<header class="ord-top"><button type="button" class="ord-x" id="ordClose" aria-label="Cerrar">${ico('back')}<span>Volver</span></button><span class="ord-eb">DELULU JOURNAL</span><span class="ord-eb">${s===0?'CÓMO COMPRAR':s===5?'¡LISTO!':`PASO ${s} DE 4`}</span></header>
+  root.innerHTML=`<header class="ord-top">${s?`<button type="button" class="ord-x" id="ordClose">${ico('back')}<span>Inicio</span></button>`:'<b class="ord-ph"></b>'}<span class="ord-eb">DELULU JOURNAL</span><span class="ord-eb">${s===0?'CÓMO COMPRAR':s===5?'¡LISTO!':`PASO ${s} DE 4`}</span></header>
    <div class="ord-main"><div class="ord-stage" id="ordStage"><span class="corner tl"></span><span class="corner br"></span><span class="star a">★</span><span class="star b">★</span>${ordPreview(bw)}<span class="ord-drag">arrastrá para girarla</span></div>
     <div class="ord-copy">${head}${body}${note?`<p class="ord-note">${note}</p>`:''}</div></div>
    <footer class="ord-nav">${s>0?`<button type="button" class="btn" id="ordPrev">${ico('left')}Atrás</button>`:'<span></span>'}<div class="ord-dots" aria-hidden="true">${dots}</div>${s<5?`<button type="button" class="btn ord-next" id="ordNext">${s===0?'Empezar':s===4?'Ver mi pedido':'Siguiente'} →</button>`:`<button type="button" class="btn" id="ordAgain">Armar otra</button>`}</footer>`}
@@ -49,7 +49,7 @@ function refreshPreview(){const st=$('#ordStage .ord-book');if(st)st.outerHTML=o
 
 const ordRoot=$('#ordRoot');
 ordRoot.addEventListener('click',async e=>{const t=e.target;
-  if(t.closest('#ordClose')){if(location.hash==='#pedir')history.replaceState(null,'',location.pathname+location.search);if(ORD.back==='open'&&ED.a)openAgenda(ED.a);else if(ORD.back==='cover'&&ED.a)openCover(ED.a);else go('home');return}
+  if(t.closest('#ordClose')){ORD.step=0;renderOrder();scrollTo(0,0);$('#order').scrollTop=0;return}
   if(t.closest('#ordNext')){ORD.step=Math.min(5,ORD.step+1);renderOrder();ordRoot.scrollTop=0;return}
   if(t.closest('#ordPrev')){ORD.step=Math.max(0,ORD.step-1);renderOrder();return}
   if(t.closest('#ordAgain')){ORD.step=1;ORD.code=null;renderOrder();return}
@@ -58,8 +58,7 @@ ordRoot.addEventListener('click',async e=>{const t=e.target;
   if(t.closest('#ordCopy')){const txt=orderText();try{await navigator.clipboard.writeText(txt);toast('Pedido copiado. Pegalo en el DM')}catch(_){showOrderText(txt)}return}
   if(t.closest('#ordFicha')){openFicha();return}
   if(t.closest('#ordDL')){const b=t.closest('#ordDL');if(b.disabled)return;b.disabled=true;try{await saveFicha();toast('Ficha descargada ✦ Ahora mandala por DM',{ms:6000})}catch(err){toast(err?.message||'No se pudo descargar la ficha')}finally{b.disabled=false}return}
-  if(t.closest('#ordDM')){const txt=orderText();try{await navigator.clipboard.writeText(txt);toast('Copiamos tu pedido: pegalo en el chat y adjuntá tu ficha',{ms:7000})}catch(_){}return}
-  if(t.closest('#ordDigital')){const a=orderAgenda();a.name='Mi Delulu';a.pages=[pg('lines'),pg('lines'),pg('dots'),pg('dots')];S.agendas.push(a);persist();toast('Tu Delulu digital está en tu estantería ✦');openCover(a);return}});
+  if(t.closest('#ordDM')){const txt=orderText();try{await navigator.clipboard.writeText(txt);toast('Copiamos tu pedido: pegalo en el chat y adjuntá tu ficha',{ms:7000})}catch(_){}return}});
 /* drag the preview to turn the notebook */
 ordRoot.addEventListener('pointerdown',e=>{const st=e.target.closest('#ordStage');if(!st)return;const b=$('.b3',st);if(!b)return;e.preventDefault();const x0=e.clientX,r0=ORD.ry;st.classList.add('dragging');
   const mv=m=>{ORD.ry=r0+(m.clientX-x0)*.6;b.style.setProperty('--ry',ORD.ry+'deg')};const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);st.classList.remove('dragging')};

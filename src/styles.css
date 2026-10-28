@@ -605,3 +605,25 @@ a.btn{text-decoration:none}
 .ord-dm:disabled{opacity:.7;cursor:progress}
 .ord-dm2{align-self:center;color:var(--ot);font:700 14px var(--f-body);letter-spacing:.16em;text-decoration:none;border-bottom:2px solid var(--oh);padding:2px 2px 4px}
 .ord-dm2:hover{color:var(--oh)}
+
+/* ================= tienda ================= */
+.shop-top{gap:8px}
+.shop-top .brand{display:inline-flex}
+.shop-nav{display:flex;align-items:center;gap:6px}
+.shop-link{font:600 14px var(--f-body);color:var(--ink);text-decoration:none;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line)}
+.shop-link:hover{background:var(--accent-soft)}
+#order{display:flex}
+#order>.ord{flex:none}
+.shop-foot{flex:none}
+.shop-foot{background:#22403B;color:#F3EEE6;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:28px;padding:40px max(24px,env(safe-area-inset-left,0px)) 28px}
+.shop-foot .logo-badge.xl{background:none;box-shadow:none;padding:0}
+.shop-foot .logo-badge.xl img{height:72px}
+.sf-brand p{margin:10px 0 0;font:400 22px/1.25 "Caveat Brush",cursive;color:#EDB8B7}
+.sf-col{display:flex;flex-direction:column;gap:10px}
+.sf-col h3{margin:0 0 4px;font:700 12px var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:#F6E08A}
+.sf-col a{color:#F3EEE6;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.sf-col a:hover{color:#F6E08A}
+.sf-copy{grid-column:1/-1;margin:8px 0 0;padding-top:18px;border-top:1px solid rgba(243,238,230,.15);font-size:13px;opacity:.7}
+@media (max-width:700px){.shop-foot{grid-template-columns:1fr}.shop-link{display:none}}
+.ord-ph{width:72px}
+.shop-nav a.btn{color:var(--ink)}

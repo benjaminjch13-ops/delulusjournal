@@ -4,11 +4,13 @@ Soñá. Planeá. Repetí.
 
 Página web de **Delulu Journal by Ensso** ([@delulu.journal](https://www.instagram.com/delulu.journal/)): libretas de cuero hechas a mano en Guatemala.
 
-En la página la gente puede:
+Esta es la **tienda**: la página para armar y pedir tu libreta.
 
-- **Diseñar libretas digitales**: portada de cuero en 3D (solapa, remaches, elástico, charm, iniciales), páginas libres con fotos, texto, stickers, cintas y plantillas, y hojearlas pasando las páginas con el dedo o el mouse.
-- **Pedir su libreta de cuero** en 4 pasos (tamaño, color del cuero, elástico y charm) y mandar el pedido por DM a Instagram. Enlace directo: `/#pedir`.
-- Exportar a PDF, imágenes o página web, y guardar copias. Todo se guarda en el navegador de cada persona.
+- **Pedí tu libreta** en 4 pasos (tamaño, color del cuero, elástico y charm) con vista 3D que se gira con el dedo.
+- **Ficha técnica**: al terminar se descarga una imagen con todo el pedido para mandarla por DM a Instagram. Enlace directo: `/#pedir`.
+- Redes: Instagram [@delulu.journal](https://www.instagram.com/delulu.journal/).
+
+La versión completa con el editor de libretas digitales vive en el repositorio `delulusV2`.
 
 ## Cómo está hecho
 
@@ -18,9 +20,12 @@ Sin frameworks: HTML, CSS y JavaScript que se juntan en un solo archivo.
 src/head.html      fuentes y título
 src/body.html      estructura de pantallas e íconos
 src/styles.css     todos los estilos
-src/js/*.js        la app, por módulos (se cargan en orden por nombre)
+src/js/*.js        por módulos (se cargan en orden por nombre)
   05-brand.js      marca: colores, logo, tamaños, cueros, elásticos y charms del pedido
+  10-25, 60        dibujo de la libreta (3D y portada para la ficha)
   95-order.js      el flujo "Pedí tu libreta"
+  96-ficha.js      la ficha técnica que se descarga
+  99-shop.js       arranque de la tienda
 build.mjs          junta todo en dist/index.html (minificado)
 ```
 

@@ -1,111 +1,22 @@
-
 <div class="app">
-  <div class="topbar">
-    <button class="btn ghost icon" id="btnMenu" aria-label="Abrir menú" title="Menú" aria-expanded="false" aria-controls="drawer"><svg class="i"><use href="#i-menu"/></svg></button>
-    <button class="brand" type="button" id="brandHome" title="Ir a mi estantería" aria-label="Delulu Journal, ir a mi estantería"></button>
+  <header class="topbar shop-top">
+    <a class="brand" href="#" id="brandHome" aria-label="Delulu Journal, inicio"></a>
     <div class="spacer"></div>
-    <div class="save" id="saveState" title="Todo se guarda solo en este navegador"><i></i><span>Guardado</span></div>
-    <button class="btn ghost icon" id="btnHelp" aria-label="Ayuda" title="Ayuda y guía"><svg class="i"><use href="#i-help"/></svg></button>
-  </div>
-  <div class="drawer-veil" id="drawerVeil" hidden></div>
-  <aside class="drawer" id="drawer" aria-label="Menú" hidden></aside>
-
-  <section class="view show" id="home">
-    <div class="home-inner">
-      <div id="hero"></div>
-      <div class="home-head">
-        <div class="hello"><p class="date" id="homeDate"></p><h1 id="homeTitle">Tu estantería</h1></div>
-        <div class="home-actions"><input type="file" accept=".json,application/json" id="impBackup" hidden>
-        <button class="btn primary" id="btnNew"><svg class="i"><use href="#i-plus"/></svg>Nueva agenda</button></div>
-      </div>
-      <div class="home-tools">
-        <label class="searchbox"><svg class="i"><use href="#i-search"/></svg><input type="search" id="homeQ" placeholder="Buscar agenda" aria-label="Buscar agenda"></label>
-        <div class="seg" id="viewSeg" role="radiogroup" aria-label="Forma de ver las agendas">
-          <button type="button" data-view="portadas" role="radio" title="Portadas"><svg class="i"><use href="#i-grid"/></svg><span>Portadas</span></button>
-          <button type="button" data-view="estante" role="radio" title="Estante"><svg class="i"><use href="#i-shelf"/></svg><span>Estante</span></button>
-          <button type="button" data-view="pila" role="radio" title="Pila"><svg class="i"><use href="#i-stack"/></svg><span>Pila</span></button>
-          <button type="button" data-view="lista" role="radio" title="Lista"><svg class="i"><use href="#i-list"/></svg><span>Lista</span></button>
-        </div>
-        <select id="homeSort" aria-label="Ordenar"><option value="recent">Más recientes</option><option value="name">Por nombre</option><option value="created">Por fecha de creación</option><option value="pages">Más páginas</option></select>
-      </div>
-      <div id="shelf"></div>
-    </div>
-  </section>
-
-  <section class="view" id="order"><div class="ord" id="ordRoot"></div></section>
-
-  <section class="view" id="open">
-    <aside class="side" id="lib"></aside>
-    <div class="stage-col">
-      <div class="stagebar">
-        <button class="btn ghost icon" id="btnBack" aria-label="Cerrar agenda"><svg class="i"><use href="#i-back"/></svg></button>
-        <div class="title" id="openTitle"></div>
-        <div class="spacer"></div>
-        <button class="btn ghost icon" id="btnUndo" aria-label="Deshacer"><svg class="i"><use href="#i-undo"/></svg></button>
-        <button class="btn ghost icon" id="btnRedo" aria-label="Rehacer"><svg class="i"><use href="#i-redo"/></svg></button>
-        <button class="btn ghost icon dt" id="btnDraw" aria-label="Dibujo libre"><svg class="i"><use href="#i-pen"/></svg></button>
-        <button class="btn ghost icon dt" id="btnSnap" aria-label="Guías de alineación" title="Guías de alineación"><svg class="i"><use href="#i-magnet"/></svg></button>
-        <button class="btn ghost icon hide-sm" id="btnView" aria-label="Una o dos páginas"><svg class="i"><use href="#i-spread"/></svg></button>
-        <button class="btn ghost icon hide-sm" id="btnZoomOut" aria-label="Alejar"><svg class="i"><use href="#i-minus"/></svg></button>
-        <button class="btn ghost icon hide-sm" id="btnZoomIn" aria-label="Acercar"><svg class="i"><use href="#i-plus"/></svg></button>
-        
-        
-        <button class="btn ghost dt" id="btnCoverFromOpen"><svg class="i"><use href="#i-book"/></svg><span class="hide-sm">Portada</span></button>
-        <button class="btn primary dt" id="btnLibMobile" hidden><svg class="i"><use href="#i-plus"/></svg>Agregar</button>
-      </div>
-      <div class="stage" id="stage"></div>
-      <div class="stagebar" style="padding-top:0">
-        <button class="btn ghost icon" id="btnPrev" aria-label="Página anterior"><svg class="i"><use href="#i-left"/></svg></button>
-        <span class="hint" id="pageInfo"></span>
-        <button class="btn ghost icon" id="btnNext" aria-label="Página siguiente"><svg class="i"><use href="#i-right"/></svg></button>
-        <div class="spacer"></div>
-        <button class="btn ghost dt" id="btnPageMenu"><svg class="i"><use href="#i-pages"/></svg>Páginas</button>
-      </div>
-      <div class="thumbs" id="thumbs" hidden></div>
-      <nav class="dock mobile-only" aria-label="Herramientas">
-        <button type="button" class="on" data-click="#btnLibMobile"><svg class="i"><use href="#i-plus"/></svg>Agregar</button>
-        <button type="button" data-click="#btnDraw"><svg class="i"><use href="#i-pen"/></svg>Dibujar</button>
-        <button type="button" data-click="#btnPageMenu"><svg class="i"><use href="#i-pages"/></svg>Páginas</button>
-        <button type="button" data-click="#btnCoverFromOpen"><svg class="i"><use href="#i-book"/></svg>Portada</button>
-        <button type="button" data-click="#btnMenu"><svg class="i"><use href="#i-menu"/></svg>Menú</button>
-      </nav>
-      <div id="ctx"></div>
-    </div>
-  </section>
-
-  <section class="view" id="cover">
-    <aside class="side" id="coverSide"></aside>
-    <div class="stage-col">
-      <div class="stagebar">
-        <button class="btn ghost icon" id="btnCoverBack" aria-label="Volver"><svg class="i"><use href="#i-back"/></svg></button>
-        <div class="title" id="coverTitle"></div>
-        <div class="spacer"></div>
-        <button class="btn ghost icon" id="cUndo" aria-label="Deshacer"><svg class="i"><use href="#i-undo"/></svg></button>
-        <button class="btn ghost icon" id="cRedo" aria-label="Rehacer"><svg class="i"><use href="#i-redo"/></svg></button>
-        <button class="btn ghost icon dt" id="cSnap" aria-label="Guías de alineación" title="Guías de alineación"><svg class="i"><use href="#i-magnet"/></svg></button>
-        
-        <button class="btn ghost dt" id="btn3d"><svg class="i"><use href="#i-cube"/></svg>Vista 3D</button>
-        <button class="btn primary dt" id="btnCoverPanel" hidden><svg class="i"><use href="#i-brush"/></svg>Personalizar</button>
-        <button class="btn primary dt" id="btnCoverOpen">Abrir agenda</button>
-      </div>
-      <div class="cover-stage" id="coverStage"></div>
-      <nav class="dock mobile-only" aria-label="Herramientas de portada">
-        <button type="button" class="on" data-click="#btnCoverPanel"><svg class="i"><use href="#i-brush"/></svg>Personalizar</button>
-        <button type="button" data-click="#btn3d"><svg class="i"><use href="#i-cube"/></svg>Vista 3D</button>
-        <button type="button" data-click="#btnCoverOpen"><svg class="i"><use href="#i-book"/></svg>Abrir</button>
-        <button type="button" data-click="#btnMenu"><svg class="i"><use href="#i-menu"/></svg>Menú</button>
-      </nav>
-      <div id="cctx"></div>
-    </div>
-  </section>
-  <section class="view" id="share">
-    <div class="stagebar"><button class="btn ghost" data-mine><svg class="i"><use href="#i-back"/></svg><span class="hide-sm">Mis agendas</span></button><div class="title" id="shareTitle"></div><div class="spacer"></div><span class="hint">Solo lectura</span></div>
-    <div class="stage" id="shareStage"></div>
-    <div class="stagebar" id="shareNav" style="justify-content:center"><button class="btn icon" id="flipPrev" aria-label="Anterior"><svg class="i"><use href="#i-left"/></svg></button><span class="hint" id="flipInfo"></span><button class="btn icon" id="flipNext" aria-label="Siguiente"><svg class="i"><use href="#i-right"/></svg></button></div>
+    <nav class="shop-nav" aria-label="Secciones">
+      <a href="#pedir" class="shop-link" data-step="1">Armá tu libreta</a>
+      <a href="https://www.instagram.com/delulu.journal/" class="btn ghost icon" target="_blank" rel="noopener" aria-label="Instagram @delulu.journal" title="@delulu.journal en Instagram"><svg class="i"><use href="#i-ig"/></svg></a>
+    </nav>
+  </header>
+  <section class="view show" id="order">
+    <div class="ord" id="ordRoot"></div>
+    <footer class="shop-foot" id="contacto">
+      <div class="sf-brand"><span class="sf-logo"></span><p>Libretas de cuero artesanal,<br>hechas a mano en Guatemala ✦</p></div>
+      <div class="sf-col"><h3>Pedidos</h3><a href="#pedir" data-step="1">Armá tu libreta en 4 pasos</a><a href="https://ig.me/m/delulu.journal" target="_blank" rel="noopener">Pedidos por DM</a></div>
+      <div class="sf-col"><h3>Seguinos</h3><a href="https://www.instagram.com/delulu.journal/" target="_blank" rel="noopener" class="sf-ig"><svg class="i"><use href="#i-ig"/></svg>@delulu.journal</a></div>
+      <p class="sf-copy">© <span id="sfYear"></span> Delulu Journal by Ensso · Soñá. Planeá. Repetí.</p>
+    </footer>
   </section>
 </div>
-<div id="modals"></div>
-
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>

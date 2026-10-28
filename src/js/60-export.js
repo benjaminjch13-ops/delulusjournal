@@ -261,6 +261,6 @@ function openExport(a){if(ED.sel)deselect();const n=a.pages.length,cur=ED.a===a&
     catch(err){if(err?.code==='cancel'){prog(0,'Exportación cancelada')}else prog(1,err?.message||'No se pudo exportar la agenda.');$('.prog i',m).style.width='0%'}
     finally{busy=null;go.disabled=false;$$('.chip,input',m).forEach(x=>x.disabled=false)}}}
 
-$('#impBackup').addEventListener('change',async ev=>{const f=ev.target.files[0];ev.target.value='';if(!f)return;
+$('#impBackup')?.addEventListener('change',async ev=>{const f=ev.target.files[0];ev.target.value='';if(!f)return;
   if(f.size>200*1048576)return toast('El archivo es demasiado grande');
   try{const l=importBackup(await f.text());go('home');toast(l.length===1?`“${l[0].name}” importada`:`${l.length} agendas importadas`)}catch(e){toast(e.message)}});
