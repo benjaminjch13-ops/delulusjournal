@@ -137,7 +137,8 @@ ordRoot.addEventListener('input',e=>{const f=e.target.dataset?.f;if(!f)return;OR
 ordRoot.addEventListener('pointerdown',e=>{const st=e.target.closest('#ordStage');if(!st||e.target.closest('button'))return;const b=$('.b3',st);if(!b)return;e.preventDefault();const x0=e.clientX,r0=ORD.ry;st.classList.add('dragging');
   const mv=m=>{ORD.ry=r0+(m.clientX-x0)*.6;b.style.setProperty('--ry',ORD.ry+'deg')};const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);st.classList.remove('dragging')};
   document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up)});
-addEventListener('resize',()=>{if($('#order').classList.contains('show'))renderOrder()});
+/* al abrir el teclado del celular la ventana cambia de alto: solo se redibuja si cambió el ancho de verdad y nadie está escribiendo */
+let ordW=innerWidth;addEventListener('resize',()=>{if(Math.abs(innerWidth-ordW)<40)return;const typing=document.activeElement?.matches?.('input,textarea,select');if(typing)return;ordW=innerWidth;if($('#order').classList.contains('show'))renderOrder()});
 function showOrderText(txt){const m=modal(`<header><h2>Tu pedido</h2><div class="spacer"></div><button class="btn ghost icon" data-x aria-label="Cerrar">${ico('x')}</button></header>
   <div class="content one"><p class="hint" style="margin:0">Copiá este texto y mandalo por DM a <b>@${BRAND.ig}</b> en Instagram.</p><textarea readonly rows="7" id="ordTxt" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel-2);color:var(--ink)">${esc(txt)}</textarea></div>
   <footer><button class="btn primary" data-x>Listo</button></footer>`,'sm');const ta=$('#ordTxt',m);ta.focus();ta.select();m.addEventListener('click',e=>{if(e.target.closest('[data-x]'))m.remove()})}
